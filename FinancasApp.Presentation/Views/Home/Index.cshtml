@@ -1,0 +1,160 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+
+    <h4>Dashboard principal</h4>
+    <p>Seja bem vindo ao sistema de controle financeiro!</p>
+
+    <div class="row mb-2">
+        <div class="col">
+            <input type="date" id="dataInicio" class="form-control" />
+        </div>
+        <div class="col">
+            <input type="date" id="dataFim" class="form-control" />
+        </div>
+        <div class="col">
+            <button id="btnFiltro" class="btn btn-primary">
+                Filtrar Dados
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div id="graficoDonnut"></div>
+        </div>
+        <div class="col">
+            <div id="graficoColunas"></div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+
+    <script>
+
+        //evento executado quando a página abrir
+        $(document).ready(function () {
+
+            $('#dataInicio').val(formatDate(getFirstDayOfMonth()));
+            $('#dataFim').val(formatDate(getLastDayOfMonth()));
+
+            consultarDados();
+
+            //ao clicar no botão de filtro
+            $("#btnFiltro").click(function () {
+                consultarDados();
+            })
+        });
+
+        function consultarDados() {
+
+            //enviando uma requisição AJAX para o controlador
+            $.ajax({
+                type: "POST",
+                url: "/Home/ObterDashboard",
+                data: {
+                    dataInicio: $("#dataInicio").val(),
+                    dataFim: $("#dataFim").val()
+                },
+                success: function (data) {
+
+                    //dados do gráfico de donut
+                    var donutData = [];
+                    var columnData = { categories: [], data: [] };
+
+                    //preenchendo os dados do gráfico de donut
+                    for (var i = 0; i < data.totalPorTipo.length; i++) {
+                        donutData.push({
+                            name: data.totalPorTipo[i].name,
+                            y: data.totalPorTipo[i].data
+                        });
+                    }
+
+                    //preenchendo os dados do gráfico de colunas
+                    for (var i = 0; i < data.totalPorCategoria.length; i++) {
+                        columnData.categories.push(data.totalPorCategoria[i].name);
+                        columnData.data.push(data.totalPorCategoria[i].data);
+                    }
+
+                    Highcharts.chart('graficoDonnut', {
+                        chart: {
+                            type: 'pie',
+                            options3d: {
+                                enabled: true,
+                                alpha: 45
+                            }
+                        },
+                        title: {
+                            text: 'Contas a Pagar e a Receber do mês'
+                        },
+                        subtitle: {
+                            text: 'Comparativo de contas a receber<br/>e contas a pagar do mês selecionado.'
+                        },
+                        plotOptions: {
+                            pie: {
+                                innerSize: '50%',
+                                depth: 45
+                            }
+                        },
+                        series: [{
+                            name: 'Total',
+                            data: donutData
+                        }]
+                    });
+
+                    Highcharts.chart('graficoColunas', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Contas a Pagar por Categorias'
+                        },
+                        subtitle: {
+                            text: 'Somatório de contas a pagar<br/>por categoria cadastrada.'
+                        },
+                        xAxis: {
+                            categories: columnData.categories
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Total'
+                            }
+                        },
+                        series: [{
+                            name: 'Total',
+                            data: columnData.data
+                        }]
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            })
+        }
+
+        // Obtém a data do primeiro dia do mês
+        function getFirstDayOfMonth() {
+            const today = new Date();
+            return new Date(today.getFullYear(), today.getMonth(), 1);
+        }
+
+        // Obtém a data do último dia do mês
+        function getLastDayOfMonth() {
+            const today = new Date();
+            return new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        }
+
+        // Formata a data no formato "YYYY-MM-DD"
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+    </script>
+}

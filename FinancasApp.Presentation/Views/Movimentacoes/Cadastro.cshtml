@@ -1,0 +1,80 @@
+﻿@model FinancasApp.Presentation.Models.MovimentacaoCadastroViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+    <h4>Cadastro de Movimentações</h4>
+    <p>Cadastre suas contas a pagar ou a receber.</p>
+
+    @using (Html.BeginForm())
+    {
+        <div class="row mb-2">
+            <div class="col">
+                <label>Nome da Conta:</label>
+                @Html.TextBoxFor(model => model.Nome, new { @class = "form-control" })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(model => model.Nome)
+                </span>
+            </div>
+            <div class="col">
+                <label>Data da Conta:</label>
+                @Html.TextBoxFor(model => model.Data, new { @type = "date", @class = "form-control" })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(model => model.Data)
+                </span>
+            </div>
+            <div class="col">
+                <label>Valor da Conta:</label>
+                @Html.TextBoxFor(model => model.Valor, new { @class = "form-control" })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(model => model.Valor)
+                </span>
+            </div>
+            <div class="col">
+                <label>Tipo da Conta:</label>
+                <div>
+                    @Html.RadioButtonFor(model => model.Tipo, 1)
+                    <span>Conta a receber</span>
+                </div>
+                <div>
+                    @Html.RadioButtonFor(model => model.Tipo, 2)
+                    <span>Conta a pagar</span>
+                </div>
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(model => model.Tipo)
+                </span>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col">
+                <label>Selecione a categoria da conta:</label>
+                @Html.DropDownListFor(model => model.CategoriaId, Model.Categorias,
+                         "Escolha uma opção", new { @class = "form-select" })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(model => model.CategoriaId)
+                </span>
+            </div>
+            <div class="col">
+                <label>Descrição da conta:</label>
+                @Html.TextAreaFor(model => model.Descricao, new { @class = "form-control" })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(model => model.Descricao)
+                </span>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col">
+                <input type="submit" class="btn btn-success" value="Realizar Cadastro" />
+                <a href="/Movimentacoes/Consulta" class="btn btn-light">
+                    Ir para a consulta
+                </a>
+            </div>
+        </div>
+
+    }
+
+</div>

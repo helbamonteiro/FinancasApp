@@ -1,0 +1,100 @@
+﻿@model FinancasApp.Presentation.Models.MovimentacaoConsultaViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+    <h4>Consulta de Movimentações</h4>
+    <p>Consulte suas contas a pagar ou a receber.</p>
+
+    @using (Html.BeginForm())
+    {
+        <div class="row mb-2">
+            <div class="col">
+                <label>Data de início do período:</label>
+                @Html.TextBoxFor(model => model.DataMin,
+                         "{0:yyyy-MM-dd}",
+                         new { @class = "form-control", @type = "date" })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(model => model.DataMin)
+                </span>
+            </div>
+            <div class="col">
+                <label>Data de fim do período:</label>
+                @Html.TextBoxFor(model => model.DataMax,
+                         "{0:yyyy-MM-dd}",
+                         new { @class = "form-control", @type = "date" })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(model => model.DataMax)
+                </span>
+            </div>
+            <div class="col">
+                <input type="submit" class="btn btn-success mt-4"
+                       value="Pesquisar Contas" />
+            </div>
+        </div>
+
+    }
+
+    @if (Model != null && Model?.Movimentacoes?.Count > 0)
+    {
+        <div class="table-responsive mt-3">
+            <table id="tabelacontas" class="table table-sm table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Valor</th>
+                        <th>Tipo</th>
+                        <th>Categoria</th>
+                        <th>Nome</th>
+                        <th>Operações</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Movimentacoes)
+                    {
+                        <tr>
+                            <td>@item.Data.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@item.Valor.Value.ToString("c")</td>
+                            <td>@item.Tipo.ToString()</td>
+                            <td>@item.Categoria.Nome</td>
+                            <td>@item.Nome</td>
+                            <td>
+                                <a href="/Movimentacoes/Edicao/@item.Id"
+                                   class="btn btn-outline-primary btn-sm me-2">
+                                    Editar
+                                </a>
+                                <a href="/Movimentacoes/Exclusao/@item.Id"
+                                   onclick="return confirm('Deseja excluir a conta selecionada?');"
+                                   class="btn btn-outline-danger btn-sm me-2">
+                                    Excluir
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    }
+
+</div>
+
+@section scripts {
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#tabelacontas").DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/pt-BR.json',
+                },
+                pageLength: 5,
+                lengthMenu: [5, 10, 25, 50],
+            })
+        })
+    </script>
+}

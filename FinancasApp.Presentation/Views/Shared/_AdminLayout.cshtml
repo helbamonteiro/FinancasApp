@@ -1,0 +1,94 @@
+﻿@using FinancasApp.Domain.Entities
+@using Newtonsoft.Json
+
+@{
+    //lendo os dados do usuário autenticado
+    var usuario = JsonConvert.DeserializeObject<Usuario>(User.Identity.Name);
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinancasApp</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-primary bg-primary">
+        <div class="container">
+            <a class="navbar-brand text-white" href="/Account/Login">
+                <strong>FinancasApp</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Home/Index">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Movimentacoes/Cadastro">
+                            Cadastrar Movimentações
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Movimentacoes/Consulta">
+                            Consultar Movimentações
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link text-white">
+                            <strong>Olá, @usuario.Nome</strong>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white"
+                           onclick="return confirm('Deseja realmente sair do sistema?');"
+                           href="/Account/Logout">
+                            Sair do sistema
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong class="text-success">Sucesso!</strong> @TempData["MensagemSucesso"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong class="text-danger">Sucesso!</strong> @TempData["MensagemErro"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-body">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/highcharts.js"></script>
+    <script src="/js/jquery.dataTables.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

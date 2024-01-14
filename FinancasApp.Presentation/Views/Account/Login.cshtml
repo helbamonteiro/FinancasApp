@@ -1,0 +1,59 @@
+﻿@model FinancasApp.Presentation.Models.AccountLoginViewModel
+
+@{
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="text-center">
+    <img src="https://pibernat.com.br/blog/wp-content/uploads/2020/11/post_thumbnail-d7f3866e449d6d248b140905515448c5-780x450.jpg" alt="https://pibernat.com.br/blog/wp-content/uploads/2020/11/post_thumbnail-d7f3866e449d6d248b140905515448c5-780x450.jpg" width="210" height="150" style="border: 2px solid #000;" />
+    <h3>Acessar Sistema</h3>
+    <p>Entre com as suas credenciais de acesso:</p>
+</div>
+<hr />
+
+<div class="text-center text-danger">
+    <h5>@TempData["MensagemErro"]</h5>
+</div>
+
+@using(Html.BeginForm())
+{
+    <div class="mb-2">
+        <label>Email de acesso:</label>
+        @Html.TextBoxFor(model => model.Email, new {
+            @class = "form-control",
+            @placeholder ="Digite seu email aqui."
+        })
+
+        <div class="text-danger"> 
+            @Html.ValidationMessageFor(model=> model.Email)
+
+        </div>
+       </div>
+    <div class="mb-2">
+        <label>Senha de acesso:</label>
+        @Html.PasswordFor(model => model.Senha, new {
+        @class = "form-control",
+        @placeholder ="Digite sua senha aqui."
+    })
+
+        <div class="text-danger">
+            @Html.ValidationMessageFor(model=> model.Senha)
+
+        </div>
+    </div>
+    <div class="mb-2 d-grid">
+        <input type="submit" class="btn btn-primary" value="Entrar" />
+    </div>
+    <div class="mb-2 row">
+        <div class="col d-grid">
+            <a href="/Account/Register" class="btn btn-sm btn-light">
+                Criar usuário
+            </a>
+        </div>
+        <div class="col d-grid">
+            <a href="/Account/ForgotPassword" class="btn btn-sm btn-light">
+                Esqueci minha senha
+            </a>
+        </div>
+    </div>
+}
