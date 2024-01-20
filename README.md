@@ -1,4 +1,4 @@
-# Website de finanças
+# Website de finanças 📈
 
 Uma aplicação para controle financeiro.
 Contendo as seguintes páginas de navegação: CADASTRO, LOGIN, DASHBOARD COM GRÁFICO, INCLUSÃO, EDIÇÃO E EXCLUSÃO DE DADOS.
